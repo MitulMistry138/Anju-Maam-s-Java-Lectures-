@@ -27,13 +27,13 @@ public class Student {
 		@GeneratedValue(strategy=GenerationType.IDENTITY)
 		private int id;
 		
-		@Column(name="student_name",nullable=false)
+		@Column(name="student_name")
 		private String studentName;
 		
-		@Column(name="student_phone",nullable=false)
+		@Column(name="student_phone")
 		private long phone;
 		
-		@Column(name="student_email",nullable=false)
+		@Column(name="student_email")
 		private String email;
 		
 		
