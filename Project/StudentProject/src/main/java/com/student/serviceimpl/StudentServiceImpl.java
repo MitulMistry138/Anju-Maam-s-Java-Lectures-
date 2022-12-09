@@ -1,9 +1,15 @@
 package com.student.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Service;
 
 import com.student.entity.Student;
+import com.student.model.StudentDTO;
 import com.student.repository.StudentRepository;
 import com.student.service.StudentService;
 import com.student.util.Converter;
@@ -17,6 +23,8 @@ public class StudentServiceImpl  implements StudentService{
 	@Autowired
 	private Converter converter;
 
+	//SAve details  method
+	
 	@Override
 	public String createStudent(Student student) {
 		String message = null;
@@ -27,9 +35,68 @@ public class StudentServiceImpl  implements StudentService{
 		}
 		return message;
 	}
+
+	//updating details student
+	@Override
+	public StudentDTO updateStudent(int id, Student student) {
+		Student existingStudent=studentRepository.findById(id).get();
+			existingStudent.setStudentName(student.getStudentName());
+			existingStudent.setPhone(student.getPhone());
+			existingStudent.setEmail(student.getEmail());
+			
+			studentRepository.save(existingStudent);
+			
+			System.out.println("Updated successfully");
+			
+			return converter.convertToStudentDTO(existingStudent);
+	}
+
+	@Override
+	public StudentDTO getStudentByID(int id) {
+		
+		Student getStudent=studentRepository.findById(id).get();
+	
+		return converter.convertToStudentDTO(getStudent);
+	}
+
+	// Deletion of Student details
+	@Override
+	public String deleteStudentByID(int id) {
+		String message = null;
+		Optional<Student> deleteStudent = studentRepository.findById(id);
+		// if it is present or not ..
+		if(deleteStudent.isPresent())
+		{
+			studentRepository.deleteById(id);
+			message = "Student Deleted Successfully ";
+		}
+		else
+			message = "Student Detail not found";
+						
+		return message;
+	}
+
+	@Override
+	public List<StudentDTO> getAllStudents() {
+		List<Student> students=studentRepository.findAll();
+		
+		List<StudentDTO> sDTO=new ArrayList<>();
+		for(Student s: students)
+		{
+			sDTO.add(converter.convertToStudentDTO(s));
+		}
+		
+		return sDTO;
+	}
+
+	@Override
+	public void deleteAllStudents() {
+		
+		studentRepository.deleteAll();
+		
+	}
 	
 }
-
 	
 	
 
