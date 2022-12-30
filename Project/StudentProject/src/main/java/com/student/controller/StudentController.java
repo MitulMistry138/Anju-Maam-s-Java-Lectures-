@@ -3,6 +3,7 @@ package com.student.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,4 +62,25 @@ public class StudentController {
 	{
 		studentService.deleteAllStudents();
 	}
+	
+	@GetMapping("/getStudentByName/{name}")
+	public List<StudentDTO> getStudentByName(@PathVariable("name") String studentName)
+	{
+			return studentService.getStudentByName(studentName);
+	}
+	
+	@GetMapping("/getStudentByEmail/{email}")
+	public List<StudentDTO> getStudentByEmail(@PathVariable("email") String email)
+	{
+		return studentService.getStudentByEmail(email);
+	}
+	
+	@PostMapping("/assignAddressToStudent/{studentId}/{addressId}")
+	public StudentDTO assignAddressToStudent(@PathVariable("studentId")int id,@PathVariable("addressId") int addressId)
+	{
+		return studentService.assignAddressToStudent(id, addressId);
+	}
+	
+	
 }
+

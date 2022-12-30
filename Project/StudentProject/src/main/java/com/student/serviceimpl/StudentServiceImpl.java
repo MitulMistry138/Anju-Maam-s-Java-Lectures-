@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Service;
 
+import com.student.entity.Address;
 import com.student.entity.Student;
+import com.student.exception.ResourceNotFoundException;
 import com.student.model.StudentDTO;
+import com.student.repository.AddressRepository;
 import com.student.repository.StudentRepository;
 import com.student.service.StudentService;
 import com.student.util.Converter;
@@ -17,9 +21,13 @@ import com.student.util.Converter;
 @Service
 public class StudentServiceImpl  implements StudentService{
 	
+	
+	private static final Logger l = LoggerFactory.getLogger(StudentServiceImpl.class);
 	@Autowired
 	private StudentRepository  studentRepository;
 	
+	@Autowired
+	private AddressRepository addressRepository;
 	@Autowired
 	private Converter converter;
 
@@ -39,7 +47,8 @@ public class StudentServiceImpl  implements StudentService{
 	//updating details student
 	@Override
 	public StudentDTO updateStudent(int id, Student student) {
-		Student existingStudent=studentRepository.findById(id).get();
+		Student existingStudent=studentRepository.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Student", "ID", id));
 			existingStudent.setStudentName(student.getStudentName());
 			existingStudent.setPhone(student.getPhone());
 			existingStudent.setEmail(student.getEmail());
@@ -54,7 +63,10 @@ public class StudentServiceImpl  implements StudentService{
 	@Override
 	public StudentDTO getStudentByID(int id) {
 		
-		Student getStudent=studentRepository.findById(id).get();
+		Student getStudent = studentRepository.findById(id).orElseThrow(()->
+		
+				new ResourceNotFoundException("Student", "ID", id));
+				
 	
 		return converter.convertToStudentDTO(getStudent);
 	}
@@ -95,6 +107,45 @@ public class StudentServiceImpl  implements StudentService{
 		studentRepository.deleteAll();
 		
 	}
+
+	//getting details by using studentnames 
+	@Override
+	public List<StudentDTO> getStudentByName(String studentName) {
+		List<Student> students=studentRepository.getStudentByName(studentName);
+		List<StudentDTO> studentDTO = new ArrayList<>();
+		for(Student s: students)
+		{
+			studentDTO.add(converter.convertToStudentDTO(s));
+		}
+		return studentDTO;
+	}
+
+	@Override
+	public List<StudentDTO> getStudentByEmail(String email) {
+		List<Student> students=studentRepository.getStudentByEmail(email);
+		List<StudentDTO> studentDTO=new ArrayList<>();
+		for(Student e: students)
+		{
+			studentDTO.add(converter.convertToStudentDTO(e));
+		}
+		
+		return studentDTO;
+	}
+
+	@Override
+	public StudentDTO assignAddressToStudent(int id, int addressId) {
+		
+	Student student=	studentRepository.findById(id).get();
+	Address address =addressRepository.findById(addressId).get();
+	student.setAddress(address);
+	studentRepository.save(student);
+		
+	return converter.convertToStudentDTO(student);
+	}
+
+	
+
+
 	
 }
 	

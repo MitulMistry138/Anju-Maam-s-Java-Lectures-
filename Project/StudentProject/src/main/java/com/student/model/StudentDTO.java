@@ -1,5 +1,7 @@
 package com.student.model;
 
+import com.student.entity.Address;
+
 import lombok.Data;
 
 
@@ -11,4 +13,5 @@ public class StudentDTO {
 	private long phone;
 	private String email;
 
+	private Address address;
 }

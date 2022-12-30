@@ -1,11 +1,17 @@
 package com.student.entity;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+
 
 import lombok.AllArgsConstructor;
 
@@ -19,6 +25,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
+
+
 @Entity
 @Table(name="student_details")
 public class Student {
@@ -36,5 +44,8 @@ public class Student {
 		@Column(name="student_email",nullable= false)
 		private String email;
 		
+		@OneToOne( fetch = FetchType.LAZY)
 		
+		@JoinColumn(name= "delete_please" )
+		private Address address;
 }

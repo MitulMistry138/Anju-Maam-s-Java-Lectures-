@@ -13,5 +13,12 @@ public interface StudentService {
 	String deleteStudentByID(int id);
 	List<StudentDTO> getAllStudents();
 	 void deleteAllStudents(); 
+	 
+	 List<StudentDTO>getStudentByName(String studentName);
+	 List<StudentDTO> getStudentByEmail(String email);
+	 
+	 StudentDTO assignAddressToStudent(int id, int addressId);
+	 
+	 
 	
 }
